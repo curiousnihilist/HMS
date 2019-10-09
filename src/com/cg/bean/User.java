@@ -1,10 +1,4 @@
-<<<<<<< HEAD
-package com.cg.bean;
 
-public class User {
-
-}
-=======
 package com.cg.bean;
 
 public class User {
@@ -67,4 +61,3 @@ public class User {
 	
 	
 }
->>>>>>> refs/remotes/origin/Akash
