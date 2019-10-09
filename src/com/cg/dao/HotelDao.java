@@ -30,4 +30,5 @@ public interface HotelDao {
 	List<Booking> viewBookingOfHotel(int hotelId);
 	List<User> viewGuestOfHotel(int hotelId);
 	List<Booking> bookingsAsPerDate(LocalDate date);
+	boolean bookingAvailibility(int roomId);
 }
