@@ -10,6 +10,7 @@ public class User {
 	public long phone;
 	public String address;
 	public String email;
+	
 	public int getUserId() {
 		return userId;
 	}
