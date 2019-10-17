@@ -9,16 +9,16 @@ import com.cg.bean.Room;
 import com.cg.bean.User;
 
 public interface AdminDao {
-	public Hotel addHotel(Hotel hotel);
-	public int deleteHotel(int hotelId);
+	public int addHotel(Hotel hotel) throws Exception;
+	public int deleteHotel(int hotelId) throws Exception;
 	public int modifyHotel(int hotelId);
 
-	public Room addRoom(Room room);
-	public int deleteRoom(int roomId);
+	public int addRoom(Room room) throws Exception;
+	public int deleteRoom(int roomId) throws Exception;
 	public int modifyRoom(int roomId);
 
-	public List<Hotel> listHotels(int hotelId);
-	public List<Booking> viewBookings(int hotelId);
-	public List<User> viewGuestList(int hotelId); 
+	public List<Hotel> listHotels(int hotelId) throws Exception;
+	public List<Booking> viewBookings(int hotelId) throws Exception;
+	public List<User> viewGuestList(int hotelId) throws Exception; 
 	public List<Booking> bookingByDate(LocalDate date);
 }

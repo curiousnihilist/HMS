@@ -6,8 +6,8 @@ public class Hotel {
 	public String hotelName;
 	public String address;
 	public String description;
-	public long phoneNo1;
-	public long phoneNo2;
+	public String phoneNo1;
+	public String phoneNo2;
 	public double price;
 	public double rating;
 	public String email;
@@ -43,16 +43,16 @@ public class Hotel {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public long getPhoneNo1() {
+	public String getPhoneNo1() {
 		return phoneNo1;
 	}
-	public void setPhoneNo1(long phoneNo1) {
+	public void setPhoneNo1(String phoneNo1) {
 		this.phoneNo1 = phoneNo1;
 	}
-	public long getPhoneNo2() {
+	public String getPhoneNo2() {
 		return phoneNo2;
 	}
-	public void setPhoneNo2(long phoneNo2) {
+	public void setPhoneNo2(String phoneNo2) {
 		this.phoneNo2 = phoneNo2;
 	}
 	public double getPrice() {

@@ -4,12 +4,6 @@ import java.time.LocalDate;
 
 public class Booking {
 	public int bookingId;
-	public LocalDate getBookingDate() {
-		return bookingDate;
-	}
-	public void setBookingDate(LocalDate bookingDate) {
-		this.bookingDate = bookingDate;
-	}
 	public int roomId;
 	public int userId;
 	public LocalDate bookedFrom;
@@ -66,6 +60,12 @@ public class Booking {
 	}
 	public void setAmount(double amount) {
 		this.amount = amount;
+	}
+	public LocalDate getBookingDate() {
+		return bookingDate;
+	}
+	public void setBookingDate(LocalDate bookingDate) {
+		this.bookingDate = bookingDate;
 	}
 	
 }

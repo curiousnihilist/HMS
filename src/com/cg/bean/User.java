@@ -6,8 +6,8 @@ public class User {
 	public String password;
 	public String userName;
 	public String role;
-	public long mobileNo;
-	public long phone;
+	public String mobileNo;
+	public String phone;
 	public String address;
 	public String email;
 	
@@ -35,16 +35,16 @@ public class User {
 	public void setRole(String role) {
 		this.role = role;
 	}
-	public long getMobileNo() {
+	public String getMobileNo() {
 		return mobileNo;
 	}
-	public void setMobileNo(long mobileNo) {
+	public void setMobileNo(String mobileNo) {
 		this.mobileNo = mobileNo;
 	}
-	public long getPhone() {
+	public String getPhone() {
 		return phone;
 	}
-	public void setPhone(long phone) {
+	public void setPhone(String phone) {
 		this.phone = phone;
 	}
 	public String getAddress() {

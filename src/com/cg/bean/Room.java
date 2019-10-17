@@ -3,10 +3,10 @@ package com.cg.bean;
 public class Room {
 	public int hotelId;
 	public int roomId;
-	public int roomNo;
+	public String roomNo;
 	public String roomType;
 	public double ratePerNight;
-	public boolean availability;
+	public int availability;	// please validate user can enter "yes","no","y","n",1,0
 	
 	public int getHotelId() {
 		return hotelId;
@@ -20,10 +20,10 @@ public class Room {
 	public void setRoomId(int roomId) {
 		this.roomId = roomId;
 	}
-	public int getRoomNo() {
+	public String getRoomNo() {
 		return roomNo;
 	}
-	public void setRoomNo(int roomNo) {
+	public void setRoomNo(String roomNo) {
 		this.roomNo = roomNo;
 	}
 	public String getRoomType() {
@@ -38,10 +38,10 @@ public class Room {
 	public void setRatePerNight(double ratePerNight) {
 		this.ratePerNight = ratePerNight;
 	}
-	public boolean isAvailability() {
+	public int isAvailability() {
 		return availability;
 	}
-	public void setAvailability(boolean availability) {
+	public void setAvailability(int availability) {
 		this.availability = availability;
 	}
 	
