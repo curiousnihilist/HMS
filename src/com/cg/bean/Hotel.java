@@ -9,7 +9,7 @@ public class Hotel {
 	public String phoneNo1;
 	public String phoneNo2;
 	public double price;
-	public double rating;
+	public String rating;
 	public String email;
 	public String fax;
 	
@@ -61,10 +61,10 @@ public class Hotel {
 	public void setPrice(double price) {
 		this.price = price;
 	}
-	public double getRating() {
+	public String getRating() {
 		return rating;
 	}
-	public void setRating(double rating) {
+	public void setRating(String rating) {
 		this.rating = rating;
 	}
 	public String getEmail() {
@@ -79,6 +79,22 @@ public class Hotel {
 	public void setFax(String fax) {
 		this.fax = fax;
 	}
+	public Hotel(String city, String hotelName, String address, String description, String phoneNo1,
+			String phoneNo2, double price, String rating, String email, String fax) {
+		this.city = city;
+		this.hotelName = hotelName;
+		this.address = address;
+		this.description = description;
+		this.phoneNo1 = phoneNo1;
+		this.phoneNo2 = phoneNo2;
+		this.price = price;
+		this.rating = rating;
+		this.email = email;
+		this.fax = fax;
+	}
 
+	public Hotel() {
+		
+	}
 	
 }

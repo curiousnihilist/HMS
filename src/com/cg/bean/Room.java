@@ -45,6 +45,15 @@ public class Room {
 		this.availability = availability;
 	}
 	
+	public Room(int hotelId, String roomNo, String roomType, double ratePerNight, int availability) {
+		super();
+		this.hotelId = hotelId;
+		this.roomNo = roomNo;
+		this.roomType = roomType;
+		this.ratePerNight = ratePerNight;
+		this.availability = availability;
+	}
+	
 	
 
 }

@@ -16,13 +16,13 @@ import com.cg.bean.User;
 
 public class AdminDaoImpl implements AdminDao{
 
-	DBSetup db;
+	DBSetup db = new DBSetup();
 	
 	
 	@Override
 	public int addHotel(Hotel hotel) throws Exception {
 		Connection conn = null;
-		String sql = "insert into hotel values(?,?,?,?,?,?,?,?,?,?)";
+		String sql = "insert into hotel values(hseq.nextval,?,?,?,?,?,?,?,?,?,?)";
 		String seq = "select hseq.currval from dual";
 		
 		try {
@@ -35,7 +35,7 @@ public class AdminDaoImpl implements AdminDao{
 			st.setDouble(5,hotel.getPrice());
 			st.setString(6,hotel.getPhoneNo1());
 			st.setString(7,hotel.getPhoneNo2());
-			st.setDouble(8,hotel.getRating());
+			st.setString(8,hotel.getRating());
 			st.setString(9,hotel.getEmail());
 			st.setString(10,hotel.getFax());
 			
@@ -43,9 +43,10 @@ public class AdminDaoImpl implements AdminDao{
 			ResultSet rs = conn.createStatement().executeQuery(seq);
 			
 			if(rs.next()) 
-				return rs.getInt("hotel_id");
+				return rs.getInt(1);
 			return 0;
 		} catch (SQLException e) {
+			e.printStackTrace();
 			throw new Exception("exception occured!");
 		}finally{
 			try {
@@ -94,23 +95,28 @@ public class AdminDaoImpl implements AdminDao{
 	@Override
 	public int addRoom(Room room) throws Exception {
 		Connection conn = null;
-		String sql = "insert into roomdetails values(?,?,?,?,?,?)";
+		String sql = "insert into roomdetails values(rseq.nextval,?,?,?,?,?)";
 		String seq = "select rseq.currval from dual";
-		
+		System.out.println("1");
 		try {
 			conn = db.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql);
+			System.out.println("1");
+
 			st.setInt(1,room.getHotelId()); // foreign key check for exception
 			st.setString(2,room.getRoomNo());
 			st.setString(3,room.getRoomType());
 			st.setDouble(4,room.getRatePerNight());
 			st.setInt(5,room.isAvailability());
-			
+			System.out.println("45");
+
 			st.executeUpdate();
+			System.out.println("55");
+
 			ResultSet rs = conn.createStatement().executeQuery(seq);
 			
 			if(rs.next()) 
-				return rs.getInt("room_id");
+				return rs.getInt(1);
 			return 0;
 		} catch (SQLException e) {
 			throw new Exception("exception occured!");
@@ -155,15 +161,14 @@ public class AdminDaoImpl implements AdminDao{
 	}
 
 	@Override
-	public List<Hotel> listHotels(int hotelId) throws Exception {
+	public List<Hotel> listHotels() throws Exception {
 		Connection conn=null;
 		Hotel hotel = null;
 		List<Hotel> hotels= new ArrayList<Hotel>();
-		String sql = "select * from hotel where hotel_id=?";
+		String sql = "select * from hotel";
 		try {
 			conn = db.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql);
-			st.setInt(1, hotelId);
 			ResultSet rs = st.executeQuery();
 			while(rs.next()) {
 				hotel = new Hotel();
@@ -175,7 +180,7 @@ public class AdminDaoImpl implements AdminDao{
 				hotel.setPrice(rs.getDouble(6));
 				hotel.setPhoneNo1(rs.getString(7));
 				hotel.setPhoneNo2(rs.getString(8));
-				hotel.setRating(rs.getDouble(9));
+				hotel.setRating(rs.getString(9));
 				hotel.setEmail(rs.getString(10));
 				hotel.setFax(rs.getString(11));
 			

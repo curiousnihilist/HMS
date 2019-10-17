@@ -17,7 +17,7 @@ public interface AdminDao {
 	public int deleteRoom(int roomId) throws Exception;
 	public int modifyRoom(int roomId);
 
-	public List<Hotel> listHotels(int hotelId) throws Exception;
+	public List<Hotel> listHotels() throws Exception;
 	public List<Booking> viewBookings(int hotelId) throws Exception;
 	public List<User> viewGuestList(int hotelId) throws Exception; 
 	public List<Booking> bookingByDate(LocalDate date);
