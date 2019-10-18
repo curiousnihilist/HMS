@@ -196,7 +196,37 @@ public class CustomerDaoImpl implements CustomerDao{
 					conn.close();
 			} catch (Exception e) {
 				e.printStackTrace();
-				}
 			}
 		}
 	}
+	
+	@Override
+	public List<LocalDate> getBookdDates(int roomId) throws BookingNotFoundException{
+		Connection conn = null;
+		String sql = "select bookedfrom, bookedto from bookingdetails where room_id=?";
+		List<LocalDate> dates = new ArrayList<>();
+		
+		try {
+			conn = db.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setInt(1, roomId);
+			ResultSet rs = st.executeQuery();
+			while(rs.next()) {
+				dates.add(rs.getDate(1).toLocalDate());
+				dates.add(rs.getDate(2).toLocalDate());
+			}
+			if (dates.isEmpty())
+				throw new BookingNotFoundException("Room is not Booked!");
+			return dates;
+		} catch (SQLException e) {
+			throw new BookingNotFoundException("");
+		}finally {
+			try {
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+}

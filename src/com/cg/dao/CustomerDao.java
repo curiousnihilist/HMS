@@ -19,5 +19,5 @@ public interface CustomerDao {
 	List<Room> searchRoom(int hotelId) throws RoomNotFoundException;
 	Booking bookRoom(Booking booking) throws Exception;
 	Booking viewStatus(int userId) throws BookingNotFoundException;
-	
+	List<LocalDate> getBookdDates(int roomId) throws BookingNotFoundException;
 }
