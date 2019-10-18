@@ -13,6 +13,7 @@ import com.cg.bean.Booking;
 import com.cg.bean.Hotel;
 import com.cg.bean.Room;
 import com.cg.bean.User;
+import com.cg.exception.HotelNotFoundException;
 
 public class AdminDaoImpl implements AdminDao{
 
@@ -20,7 +21,7 @@ public class AdminDaoImpl implements AdminDao{
 	
 	
 	@Override
-	public int addHotel(Hotel hotel) throws Exception {
+	public int addHotel(Hotel hotel) throws HotelNotFoundException {
 		Connection conn = null;
 		String sql = "insert into hotel values(hseq.nextval,?,?,?,?,?,?,?,?,?,?)";
 		String seq = "select hseq.currval from dual";
@@ -46,8 +47,7 @@ public class AdminDaoImpl implements AdminDao{
 				return rs.getInt(1);
 			return 0;
 		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new Exception("exception occured!");
+			throw new HotelNotFoundException("exception occured!");
 		}finally{
 			try {
 				if(conn!=null)
@@ -61,7 +61,7 @@ public class AdminDaoImpl implements AdminDao{
 	}
 
 	@Override
-	public int deleteHotel(int hotelId) throws Exception {
+	public int deleteHotel(int hotelId) throws HotelNotFoundException {
 		Connection conn = null;
 		String sql = "delete from hotel where hotel_id=?";
 		
@@ -74,7 +74,7 @@ public class AdminDaoImpl implements AdminDao{
 				return hotelId;
 			return 0;
 		} catch (SQLException e) {
-			throw new Exception("Hotel not deleted"); 
+			throw new HotelNotFoundException("Hotel not deleted"); 
 		}finally{
 			try {
 				if(conn!=null)
@@ -88,36 +88,37 @@ public class AdminDaoImpl implements AdminDao{
 
 	@Override
 	public int modifyHotel(int hotelId) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public int addRoom(Room room) throws Exception {
 		Connection conn = null;
+		String check = "select * from hotel where hotel_id="+room.getHotelId();
 		String sql = "insert into roomdetails values(rseq.nextval,?,?,?,?,?)";
 		String seq = "select rseq.currval from dual";
-		System.out.println("1");
 		try {
 			conn = db.getConnection();
+			ResultSet rs1 = conn.createStatement().executeQuery(check);
+			
+			if(rs1.next() == false)
+				throw new HotelNotFoundException("Hotel not found with this room id!");
+
 			PreparedStatement st = conn.prepareStatement(sql);
-			System.out.println("1");
 
 			st.setInt(1,room.getHotelId()); // foreign key check for exception
 			st.setString(2,room.getRoomNo());
 			st.setString(3,room.getRoomType());
 			st.setDouble(4,room.getRatePerNight());
 			st.setInt(5,room.isAvailability());
-			System.out.println("45");
-
 			st.executeUpdate();
-			System.out.println("55");
-
 			ResultSet rs = conn.createStatement().executeQuery(seq);
 			
 			if(rs.next()) 
 				return rs.getInt(1);
 			return 0;
+		
+			
 		} catch (SQLException e) {
 			throw new Exception("exception occured!");
 		}finally{
@@ -186,7 +187,7 @@ public class AdminDaoImpl implements AdminDao{
 			
 				hotels.add(hotel);
 			}
-			if(hotels.size()==0)
+			if(hotels.isEmpty())
 				throw new Exception("No hotels found!");
 			return hotels;
 		} catch (SQLException e) {
@@ -206,7 +207,7 @@ public class AdminDaoImpl implements AdminDao{
 	public List<Booking> viewBookings(int hotelId) throws Exception {
 		Connection conn = null;
 		Booking booking = null;
-		List<Booking> bookings = new ArrayList<Booking>();
+		List<Booking> bookings = new ArrayList<>();
 		String sql = "select * from bookingdetails where hotel_id=?";
 		conn = db.getConnection();
 		PreparedStatement st = conn.prepareStatement(sql);
@@ -223,9 +224,10 @@ public class AdminDaoImpl implements AdminDao{
 				booking.setAdults(rs.getInt(6));
 				booking.setChildren(rs.getInt(7));
 				booking.setAmount(rs.getDouble(8));
+				booking.setBookingDate(rs.getDate(9).toLocalDate());
 				bookings.add(booking);
 			}
-			if(bookings.size()==0)
+			if(bookings.isEmpty())
 				throw new Exception("No booking found!");
 			return bookings;
 		} catch (Exception e) {
@@ -263,7 +265,7 @@ public class AdminDaoImpl implements AdminDao{
 				user.setEmail(rs.getString(8));
 				users.add(user);
 			}
-			if(users.size()==0)
+			if(users.isEmpty())
 				throw new Exception("No user found");
 			return users;
 		} catch (Exception e) {

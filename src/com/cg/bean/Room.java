@@ -1,12 +1,12 @@
 package com.cg.bean;
 
 public class Room {
-	public int hotelId;
-	public int roomId;
-	public String roomNo;
-	public String roomType;
-	public double ratePerNight;
-	public int availability;	// please validate user can enter "yes","no","y","n",1,0
+	private int hotelId;
+	private int roomId;
+	private String roomNo;
+	private String roomType;
+	private double ratePerNight;
+	private int availability;	// please validate user can enter "yes","no","y","n",1,0
 	
 	public int getHotelId() {
 		return hotelId;
@@ -46,7 +46,6 @@ public class Room {
 	}
 	
 	public Room(int hotelId, String roomNo, String roomType, double ratePerNight, int availability) {
-		super();
 		this.hotelId = hotelId;
 		this.roomNo = roomNo;
 		this.roomType = roomType;
@@ -55,5 +54,6 @@ public class Room {
 	}
 	
 	
-
+	public Room() {
+	}
 }

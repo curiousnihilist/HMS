@@ -2,14 +2,14 @@
 package com.cg.bean;
 
 public class User {
-	public int userId;
-	public String password;
-	public String userName;
-	public String role;
-	public String mobileNo;
-	public String phone;
-	public String address;
-	public String email;
+	private int userId;
+	private String password;
+	private String userName;
+	private String role;
+	private String mobileNo;
+	private String phone;
+	private String address;
+	private String email;
 	
 	public int getUserId() {
 		return userId;

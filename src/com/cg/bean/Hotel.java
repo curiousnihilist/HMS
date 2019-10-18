@@ -1,17 +1,17 @@
 package com.cg.bean;
 
 public class Hotel {
-	public int hotelId;
-	public String city;
-	public String hotelName;
-	public String address;
-	public String description;
-	public String phoneNo1;
-	public String phoneNo2;
-	public double price;
-	public String rating;
-	public String email;
-	public String fax;
+	private int hotelId;
+	private String city;
+	private String hotelName;
+	private String address;
+	private String description;
+	private String phoneNo1;
+	private String phoneNo2;
+	private double price;
+	private String rating;
+	private String email;
+	private String fax;
 	
 	public int getHotelId() {
 		return hotelId;

@@ -9,13 +9,12 @@ import java.sql.Statement;
 public class DBSetup {
 	private static String url ="jdbc:oracle:thin:@localhost:1521:xe";
 	private static String username ="Akash";
-	private static String password ="oracle";
+	private static String pass ="oracle";
 	
 	public Connection getConnection() {
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
-			Connection cn = (Connection) DriverManager.getConnection(url,username,password);
-			return cn;
+			return DriverManager.getConnection(url,username,pass);
 		} catch (ClassNotFoundException e) {
 			System.out.println("Driver not found!");
 			return null;

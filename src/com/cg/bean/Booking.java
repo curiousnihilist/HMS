@@ -3,15 +3,23 @@ package com.cg.bean;
 import java.time.LocalDate;
 
 public class Booking {
-	public int bookingId;
-	public int roomId;
-	public int userId;
-	public LocalDate bookedFrom;
-	public LocalDate bookedTo;
-	public int adults;
-	public int children;
-	public double amount;
-	public LocalDate bookingDate;
+	private int bookingId;
+	private int roomId;
+	private int userId;
+	private LocalDate bookedFrom;
+	private LocalDate bookedTo;
+	private int adults;
+	private int children;
+	private double amount;
+	private int hotelId;
+	
+	public int getHotelId() {
+		return hotelId;
+	}
+	public void setHotelId(int hotelId) {
+		this.hotelId = hotelId;
+	}
+	private LocalDate bookingDate;
 	
 	public int getBookingId() {
 		return bookingId;

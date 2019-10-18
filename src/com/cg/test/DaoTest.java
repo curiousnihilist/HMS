@@ -29,14 +29,15 @@ public class DaoTest {
 	public void daoHotelTest() throws Exception {
 		Hotel h = new Hotel("Kolkata","Regent","Salt Lake","best in town","7894561122"
 							,"7903430071",2000.0,"go","reghelp@gmail.com","89-654");
-		dao.addHotel(h);
+		//dao.addHotel(h);
 		//dao.deleteHotel(1005);
 		//org.junit.Assert.assertNotNull(dao.listHotels().toString());
+		
 	}
 	
 	@Test
 	public void daoRoomTest() throws Exception {
-		Room r = new Room(1006,"204","AC",5223.5,1);
-		//dao.addRoom(r);
+		Room r = new Room(1023,"204","AC",5223.5,1);
+		dao.addRoom(r);
 	}
 }
