@@ -7,6 +7,7 @@ import com.cg.bean.Booking;
 import com.cg.bean.Hotel;
 import com.cg.bean.Room;
 import com.cg.bean.User;
+import com.cg.exception.UserNotFoundException;
 
 public interface AdminDao {
 	public int addHotel(Hotel hotel) throws Exception;
@@ -21,4 +22,6 @@ public interface AdminDao {
 	public List<Booking> viewBookings(int hotelId) throws Exception;
 	public List<User> viewGuestList(int hotelId) throws Exception; 
 	public List<Booking> bookingByDate(LocalDate date);
+
+	public String validateLogin(int userId) throws UserNotFoundException;
 }

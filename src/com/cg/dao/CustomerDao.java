@@ -20,4 +20,5 @@ public interface CustomerDao {
 	Booking bookRoom(Booking booking) throws Exception;
 	Booking viewStatus(int userId) throws BookingNotFoundException;
 	List<LocalDate> getBookdDates(int roomId) throws BookingNotFoundException;
+	public String validateLogin(int userId) throws UserNotFoundException;
 }

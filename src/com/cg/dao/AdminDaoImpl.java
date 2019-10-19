@@ -14,6 +14,7 @@ import com.cg.bean.Hotel;
 import com.cg.bean.Room;
 import com.cg.bean.User;
 import com.cg.exception.HotelNotFoundException;
+import com.cg.exception.UserNotFoundException;
 
 public class AdminDaoImpl implements AdminDao{
 
@@ -284,6 +285,32 @@ public class AdminDaoImpl implements AdminDao{
 	public List<Booking> bookingByDate(LocalDate date) {
 		
 		return null;
+	}
+
+	@Override
+	public String validateLogin(int userId) throws UserNotFoundException {
+		Connection conn = null;
+		String sql = "select password from users where user_id=?";
+		
+		try {
+			conn = db.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setInt(1, userId);
+			ResultSet rs = st.executeQuery();
+			if(rs.next())
+				return rs.getString(1);
+			else
+				throw new UserNotFoundException("User Not Found!");
+		} catch (SQLException e) {
+			throw new UserNotFoundException("");
+		}finally {
+			try {
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 }
