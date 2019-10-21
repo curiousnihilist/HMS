@@ -1,4 +1,4 @@
-package com.cg.dao;
+package com.cg.service;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -9,7 +9,7 @@ import com.cg.bean.Room;
 import com.cg.bean.User;
 import com.cg.exception.UserNotFoundException;
 
-public interface AdminDao {
+public interface AdminService {
 	public int addHotel(Hotel hotel) throws Exception;
 	public int deleteHotel(int hotelId) throws Exception;
 	public int modifyHotel(int hotelId);

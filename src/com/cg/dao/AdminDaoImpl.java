@@ -288,18 +288,18 @@ public class AdminDaoImpl implements AdminDao{
 	}
 
 	@Override
-	public String validateLogin(int userId) throws UserNotFoundException {
+	public boolean validateLogin(int userId, String password) throws UserNotFoundException {
 		Connection conn = null;
-		String sql = "select password from users where user_id=?";
+		String sql = "select password from users where role=admin and user_id=?";
 		
 		try {
 			conn = db.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql);
 			st.setInt(1, userId);
 			ResultSet rs = st.executeQuery();
-			if(rs.next())
-				return rs.getString(1);
-			else
+			if(rs.next()) {
+				return rs.getString(1).equals(password);
+			}else
 				throw new UserNotFoundException("User Not Found!");
 		} catch (SQLException e) {
 			throw new UserNotFoundException("");

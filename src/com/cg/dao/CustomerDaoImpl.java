@@ -51,7 +51,7 @@ public class CustomerDaoImpl implements CustomerDao{
 	}
 
 	@Override
-	public List<Hotel> searchHotel(int hotelId, String city, double minPrice, double maxPrice ) throws HotelNotFoundException {
+	public List<Hotel> searchHotelByCity( String city, double minPrice, double maxPrice ) throws HotelNotFoundException {
 		Hotel hotel = null;
 		Connection conn = null;
 		List<Hotel> hotels = new ArrayList<>();
@@ -163,9 +163,10 @@ public class CustomerDaoImpl implements CustomerDao{
 	}
 
 	@Override
-	public Booking viewStatus(int userId) throws BookingNotFoundException{
+	public List<Booking> viewStatus(int userId) throws BookingNotFoundException{
 		Booking booking = null;
 		Connection conn = null;
+		List<Booking> bookings = new ArrayList<Booking>();
 		String sql = "select * from bookingdetails where user_id=?";
 		try {
 			conn = db.getConnection();
@@ -184,10 +185,11 @@ public class CustomerDaoImpl implements CustomerDao{
 				booking.setAmount(rs.getDouble(8));
 				booking.setHotelId(rs.getInt(9));
 				booking.setBookingDate(rs.getDate(10).toLocalDate());
+				bookings.add(booking);
 			}
-			if(booking == null)
+			if(bookings.isEmpty())
 				throw new BookingNotFoundException("No Room Found");
-			return booking;
+			return bookings;
 		} catch (SQLException e) {
 			throw new BookingNotFoundException("");
 		}finally {
@@ -231,18 +233,18 @@ public class CustomerDaoImpl implements CustomerDao{
 	}
 	
 	@Override
-	public String validateLogin(int userId) throws UserNotFoundException {
+	public boolean validateLogin(int userId, String password) throws UserNotFoundException {
 		Connection conn = null;
-		String sql = "select password from users where user_id=?";
+		String sql = "select password from users where role=customer and user_id=?";
 		
 		try {
 			conn = db.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql);
 			st.setInt(1, userId);
 			ResultSet rs = st.executeQuery();
-			if(rs.next())
-				return rs.getString(1);
-			else
+			if(rs.next()) {
+				return rs.getString(1).equals(password);
+			}else
 				throw new UserNotFoundException("User Not Found!");
 		} catch (SQLException e) {
 			throw new UserNotFoundException("");
@@ -251,6 +253,46 @@ public class CustomerDaoImpl implements CustomerDao{
 				if(conn!=null)
 					conn.close();
 			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@Override
+	public List<Hotel> searchHotelByName(String hotelName) throws HotelNotFoundException {
+		Hotel hotel = null;
+		Connection conn = null;
+		List<Hotel> hotels = new ArrayList<>();
+		String sql = "select * from hotel where hotel_name=";
+		try {
+			conn = db.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, hotelName);
+			ResultSet rs = st.executeQuery();
+			while(rs.next()) {
+				hotel = new Hotel();
+				hotel.setHotelId(rs.getInt(1));
+				hotel.setCity(rs.getString(2));
+				hotel.setHotelName(rs.getString(3));
+				hotel.setDescription(rs.getString(4));
+				hotel.setPrice(rs.getDouble(5));
+				hotel.setPhoneNo1(rs.getString(6));
+				hotel.setPhoneNo2(rs.getString(7));
+				hotel.setRating(rs.getString(8));
+				hotel.setEmail(rs.getString(9));
+				hotel.setFax(rs.getString(10));
+				hotels.add(hotel);
+			}
+			if(hotels.isEmpty())
+				throw new HotelNotFoundException("No hotels found!");
+			return hotels;
+		} catch (SQLException e) {
+			throw new HotelNotFoundException("");
+		}finally {
+			try {
+				if(conn!=null)
+					conn.close();
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}

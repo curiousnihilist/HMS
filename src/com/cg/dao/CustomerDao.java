@@ -15,10 +15,11 @@ import com.cg.exception.UserNotFoundException;
 public interface CustomerDao {
 	
 	int saveUser(User user) throws UserNotFoundException;
-	List<Hotel> searchHotel(int hotelId, String city, double minPrice, double maxPrice ) throws HotelNotFoundException;
+	List<Hotel> searchHotelByCity(String city, double minPrice, double maxPrice ) throws HotelNotFoundException;
 	List<Room> searchRoom(int hotelId) throws RoomNotFoundException;
 	Booking bookRoom(Booking booking) throws Exception;
-	Booking viewStatus(int userId) throws BookingNotFoundException;
+	List<Booking> viewStatus(int userId) throws BookingNotFoundException;
 	List<LocalDate> getBookdDates(int roomId) throws BookingNotFoundException;
-	public String validateLogin(int userId) throws UserNotFoundException;
+	public boolean validateLogin(int userId, String password) throws UserNotFoundException;
+	List<Hotel> searchHotelByName(String hotelName) throws HotelNotFoundException;
 }

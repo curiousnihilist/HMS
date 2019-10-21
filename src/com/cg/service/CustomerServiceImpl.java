@@ -22,9 +22,9 @@ public class CustomerServiceImpl implements CustomerService{
 	}
 
 	@Override
-	public List<Hotel> findHotel(int hotelId, String city, double minPrice, double maxPrice)
+	public List<Hotel> findHotelByCity( String city, double minPrice, double maxPrice)
 			throws HotelNotFoundException {
-		return cdao.searchHotel(hotelId, city, minPrice, maxPrice);
+		return cdao.searchHotelByCity(city, minPrice, maxPrice);
 	}
 
 	@Override
@@ -33,15 +33,26 @@ public class CustomerServiceImpl implements CustomerService{
 	}
 
 	@Override
-	public Booking viewStatus(int userId) throws BookingNotFoundException {
+	public List<Booking> viewStatus(int userId) throws BookingNotFoundException {
 		return cdao.viewStatus(userId);
 	}
 
+	@Override
 	public boolean isRoomAvailable(LocalDate checkIn, int roomId) throws BookingNotFoundException {
 		List<LocalDate> dates = cdao.getBookdDates(roomId);
 		if(checkIn.isAfter(dates.get(0)) && checkIn.isBefore(dates.get(1)))
 			return false;
 		return true;
+	}
+	
+	@Override
+	public boolean validateLogin(int userId, String password) throws UserNotFoundException {
+		return cdao.validateLogin(userId, password);
+	}
+
+	@Override
+	public List<Hotel> findHotelByName(String hotelName) throws HotelNotFoundException {
+		return cdao.searchHotelByName(hotelName);
 	}
 
 }
