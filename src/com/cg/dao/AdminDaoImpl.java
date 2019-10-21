@@ -47,7 +47,7 @@ public class AdminDaoImpl implements AdminDao{
 				return rs.getInt(1);
 			return 0;
 		} catch (SQLException e) {
-			throw new HotelNotFoundException("exception occured!");
+			throw new HotelNotFoundException(e.getMessage());
 		}finally{
 			try {
 				if(conn!=null)
@@ -120,7 +120,7 @@ public class AdminDaoImpl implements AdminDao{
 		
 			
 		} catch (SQLException e) {
-			throw new Exception("exception occured!");
+			throw new Exception(e.getMessage());
 		}finally{
 			try {
 				if(conn!=null)

@@ -37,7 +37,7 @@ public class DaoTest {
 	
 	@Test
 	public void daoRoomTest() throws Exception {
-		Room r = new Room(1023,"204","AC",5223.5,1);
+		Room r = new Room(1006,"204","AC",5223.5,1);
 		dao.addRoom(r);
 	}
 }
