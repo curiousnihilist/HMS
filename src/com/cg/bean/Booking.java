@@ -1,13 +1,14 @@
 package com.cg.bean;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 public class Booking {
 	private int bookingId;
 	private int roomId;
 	private int userId;
-	private LocalDate bookedFrom;
-	private LocalDate bookedTo;
+	private Date bookedFrom;
+	private Date bookedTo;
 	private int adults;
 	private int children;
 	private double amount;
@@ -39,17 +40,17 @@ public class Booking {
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
-	public LocalDate getBookedFrom() {
+	public Date getBookedFrom() {
 		return bookedFrom;
 	}
-	public void setBookedFrom(LocalDate bookedFrom) {
-		this.bookedFrom = bookedFrom;
+	public void setBookedFrom(Date bookedFrom2) {
+		this.bookedFrom = bookedFrom2;
 	}
-	public LocalDate getBookedTo() {
+	public Date getBookedTo() {
 		return bookedTo;
 	}
-	public void setBookedTo(LocalDate bookedTo) {
-		this.bookedTo = bookedTo;
+	public void setBookedTo(Date bookedTo2) {
+		this.bookedTo = bookedTo2;
 	}
 	public int getAdults() {
 		return adults;

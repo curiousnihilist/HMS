@@ -1,6 +1,8 @@
 package com.cg.client;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -10,7 +12,7 @@ import com.cg.bean.Hotel;
 import com.cg.bean.Booking;
 import com.cg.bean.Room;
 import com.cg.dao.JdbcUtil;
-import com.cg.exception.HotelNotAddedException;
+import com.cg.exception.HotelNotFoundException;
 import com.cg.exception.RoomNotFoundException;
 import com.cg.service.CustomerService;
 import com.cg.service.AdminService;
@@ -19,15 +21,15 @@ import com.cg.service.AdminServiceImpl;
 
 public class UserInterface {
 	private static Scanner console;
-	
-	static{
+
+	static {
 		console = new Scanner(System.in);
 	}
-	
+
 	public static void main(String[] args) {
 
 		int option = 0;
-		while(true){
+		while (true) {
 			System.out.println("Specify Role: ");
 			System.out.println("1-New User");
 			System.out.println("2-Customer / Hotel Staff");
@@ -35,50 +37,65 @@ public class UserInterface {
 			System.out.println("4-Exit");
 			System.out.println("Enter Option");
 			option = console.nextInt();
-			
-			switch(option){
-			case 1: registerUser(); break;
-			case 2: loginUser(); break;
-			case 3: loginAdmin(); break;
-			case 4: System.exit(0);
-			default: System.out.println("Please enter correct option");
+
+			switch (option) {
+			case 1:
+				registerUser();
+				break;
+			case 2:
+				loginUser();
+				break;
+			case 3:
+				loginAdmin();
+				break;
+			case 4:
+				System.exit(0);
+			default:
+				System.out.println("Please enter correct option");
 			}
 		}
 	}
 
-	private static void loginUser(){
-		CustomerService userService = new CustomerServiceImpl();	
+	private static void loginUser() {
+		CustomerService userService = new CustomerServiceImpl();
 
 		String password;
 		int userId;
-	
+
 		do {
 			System.out.print("Enter User ID: ");
-			userId = console.next();
-		} while(!userService.validateUserId(userId));
+			userId = console.nextInt();
+		} while (!userService.validateUserId(userId));
 
 		do {
 			System.out.print("Enter Password: ");
 			password = console.next();
-		} while(!userService.validatePassword(password));
+		} while (!userService.validatePassword(password));
 
-		do{
-		int option = 0;
-		while(true){
+		do {
+			int option = 0;
+			while (true) {
 				System.out.println("Choose an action: ");
 				System.out.println("1-Search for Hotel Rooms");
 				System.out.println("2-View Booking Status");
-				System.out.println("3-Exit")
+				System.out.println("3-Exit");
 				System.out.println("Enter Option");
 				option = console.nextInt();
-			
-				switch(option){
-				case 1: findHotel(); break;
-				case 2: viewBookingStatus(); break;
-				case 3: System.exit(0);
-				default: System.out.println("Please enter correct option");
+
+				switch (option) {
+				case 1:
+					findHotel();
+					break;
+				case 2:
+					viewBookingStatus();
+					break;
+				case 3:
+					System.exit(0);
+				default:
+					System.out.println("Please enter correct option");
+				}
 			}
-		} while(!userService.validateLogin(userId));	
+		} while (!userService.validateLogin(userId));
 	}
 
 	private static void loginAdmin(){
@@ -89,7 +106,7 @@ public class UserInterface {
 	
 		do {
 			System.out.print("Enter User ID: ");
-			userId = console.next();
+			userId = console.nextInt();
 		} while(!userService.validateUserId(userId));
 
 		do {
@@ -128,54 +145,55 @@ public class UserInterface {
 				case 10: listBookingByDate(); break;
 				case 11: System.exit(0);
 				default: System.out.println("Please enter correct option");
-			}
+				}
+			} 
 		} while(!userService.validateLogin(userId));
 	}
 
-	private static void registerUser(){
+	private static void registerUser() {
 		CustomerService userService = new CustomerServiceImpl();
-	
+
 		String userName, password, mobileNo, phone, role, address, email;
 		int userId;
-		
+
 		do {
 			System.out.print("Enter User Name: ");
 			userName = console.next();
-		} while(!userService.validateName(userName));
+		} while (!userService.validateName(userName));
 
 		do {
 			System.out.print("Enter User ID: ");
-			userId = console.next();
-		} while(!userService.validateUserId(userId));
+			userId = console.nextInt();
+		} while (!userService.validateUserId(userId));
 
 		do {
 			System.out.print("Enter Password: ");
 			password = console.next();
-		} while(!userService.validateUserId(userId));
+		} while (!userService.validateUserId(userId));
 
 		do {
 			System.out.print("Enter Role: ");
 			role = console.next();
-		} while(!userService.validateRole(role));
+		} while (!userService.validateRole(role));
 
 		do {
 			System.out.print("Enter Mobile No.: ");
 			mobileNo = console.next();
-		} while(!userService.validateMobileNo(mobileNo));
+		} while (!userService.validateMobileNo(mobileNo));
 
 		do {
 			System.out.print("Enter Phone No.: ");
 			phone = console.next();
-		} while(!userService.validatePhone(phone));
-		
+		} while (!userService.validatePhone(phone));
+
 		do {
 			System.out.print("Enter Email ID: ");
 			email = console.next();
-		} while(!userService.validateEmail(email));
+		} while (!userService.validateEmail(email));
 
 		System.out.print("Enter Address: ");
 		address = console.next();
-		
+
 		User u = new User();
 		u.setUserName(userName);
 		u.setUserId(userId);
@@ -184,16 +202,16 @@ public class UserInterface {
 		u.setMobileNo(mobileNo);
 		u.setPhone(phone);
 		u.setAddress(address);
-		u.setEmail(email);		
+		u.setEmail(email);
 
 		try {
 			User user = userService.addUser(u);
-			System.out.println("Registration successful with User ID: " + userId );
+			System.out.println("Registration successful with User ID: " + userId);
 			loginUser();
 		} catch (UserNotFoundException e1) {
 			System.out.println("Registration unsuccessful!! Try again");
 		}
-		
+
 	}
 
 	private static void findHotel(){
@@ -205,19 +223,19 @@ public class UserInterface {
 		String city, hotelName;
 
 		System.out.print("Search by:	0-By City	1-By Hotel");
-		flag = console.next();
+		flag = console.nextInt();
 
 		if(flag == 0){  
 			do {
 				System.out.print("Enter city to look for hotels in: ");
 				city = console.next();
-			} while(!service.validateCity(city));
+			} while(!userService.validateCity(city));
 		
 			System.out.print("Enter minimum price: ");
-			minPrice = console.next();
+			minPrice = console.nextDouble();
 
 			System.out.print("Enter maximum price: ");
-			maxPrice = console.next();
+			maxPrice = console.nextDouble();
 
 			try {
 				ArrayList<Hotel> result = userService.searchHotelByCity(city, minPrice, maxPrice);
@@ -225,7 +243,7 @@ public class UserInterface {
 					System.out.println(hotel.toString());
 				}
 			} catch (HotelNotFoundException e2) {
-				e.printStackTrace();
+				System.out.println("No hotels found with those criterion!! Try again");
 			}
 			
 			while(true){
@@ -238,6 +256,7 @@ public class UserInterface {
 				case 1: bookRoom(); break;
 				case 2: System.exit(0);
 				default: System.out.println("Please enter correct option");
+				}
 			}
 		}
 
@@ -253,7 +272,7 @@ public class UserInterface {
 					System.out.println(hotel.toString());
 				}
 			} catch (HotelNotFoundException e2) {
-				e.printStackTrace();
+				System.out.println("No such hotel found!! Try again");
 			}
 
 			while(true){
@@ -266,61 +285,61 @@ public class UserInterface {
 				case 1: bookRoom(); break;
 				case 2: System.exit(0);
 				default: System.out.println("Please enter correct option");
+				}
 			}
 		}
 	}
 
-	private static void bookRoom(){
-		
+	private static void bookRoom() {
+
 		CustomerService userService = new CustomerServiceImpl();
 
 		int bookingId, roomId, userId, adults, children, hotelId;
 		double amount;
-		LocalDate bookedFrom, bookedTo;
-	
+		Date bookedFrom, bookedTo;
+		String dateFrom, dateTo;
+		SimpleDateFormat myFormat = new SimpleDateFormat("dd MM yyyy");
+
 		do {
 			System.out.print("Enter User ID: ");
-			userId = console.next();
-		} while(!userService.validateUserId(userId));
+			userId = console.nextInt();
+		} while (!userService.validateUserId(userId));
 
 		do {
 			System.out.print("Enter Hotel ID: ");
-			hotelId = console.next();
-		} while(!userService.validatehotelId(hotelId));
+			hotelId = console.nextInt();
+		} while (!userService.validatehotelId(hotelId));
 
 		do {
 			System.out.print("Enter Booking ID: ");
-			bookingId = console.next();
-		} while(!userService.validatebookingId(bookingId));
+			bookingId = console.nextInt();
+		} while (!userService.validatebookingId(bookingId));
 
 		do {
 			System.out.print("Enter Room Id: ");
-			roomId = console.next();
-		} while(!userService.validateRoomId(roomId));
+			roomId = console.nextInt();
+		} while (!userService.validateRoomId(roomId));
 
 		System.out.print("Enter no. of adults (max-2): ");
-		adults = console.next();
-		
+		adults = console.nextInt();
+
 		System.out.print("Enter no. of children (max-2): ");
-		children = console.next();
+		children = console.nextInt();
 
 		do {
-			System.out.print("Enter Phone No.: ");
-			phone = console.next();
-		} while(!userService.validatePhone(phone));
-		
-		do {
-			System.out.print("Enter staring date: ");
-			bookedFrom = console.next();
-		} while(!userService.validateDate(bookedFrom));
+			System.out.print("Enter staring date ('dd mm yyyy') : ");
+			dateFrom = console.next();
+			bookedFrom = myFormat.parse(dateFrom);
+		} while (!userService.validateDate(bookedFrom));
 
 		do {
-			System.out.print("Enter ending date: ");
-			bookedTo = console.next();
-		} while(!userService.validateDate(bookedTo));
+			System.out.print("Enter ending date ('dd mm yyyy') : ");
+			dateTo = console.next();
+			bookedTo = myFormat.parse(dateTo);
+		} while (!userService.validateDate(bookedTo));
 
 		System.out.println("Enter the amount to be paid: ");
-		amount = console.next();
+		amount = console.nextDouble();
 
 		Booking b = new Booking();
 		b.setBookingId(bookingId);
@@ -331,25 +350,25 @@ public class UserInterface {
 		b.setBookedTo(bookedTo);
 		b.setAmount(amount);
 		b.setAdults(adults);
-		b.setChildren(children);		
+		b.setChildren(children);
 
 		try {
 			Booking booking = userService.bookRoom(b);
-			System.out.println("Booking successful with Booking ID: " + bookingId );
+			System.out.println("Booking successful with Booking ID: " + bookingId);
 			viewBookingStatus();
 		} catch (HotelNotFoundException e2) {
 			System.out.println("Booking unsuccessful!! Try again");
 		}
 	}
 
-	private static void viewBookingStatus(){
+	private static void viewBookingStatus() {
 
 		CustomerService userService = new CustomerServiceImpl();
 
 		int userId;
 
 		System.out.print("Enter User ID: ");
-		userId = console.next();
+		userId = console.nextInt();
 
 		try {
 			ArrayList<Booking> result = userService.viewStatus(userId);
@@ -361,61 +380,61 @@ public class UserInterface {
 		}
 	}
 
-	private static void addHotel(){
+	private static void addHotel() {
 
 		AdminService adminService = new AdminServiceImpl();
 
 		int hotelId;
 		String city, hotelName, address, description, phoneNo1, phoneNo2, rating, email, fax;
 		double avgRatePerNight;
-	
+
 		do {
 			System.out.print("Enter Hotel ID: ");
-			hotelId = console.next();
-		} while(!adminService.validateHotelId(hotelId));
+			hotelId = console.nextInt();
+		} while (!adminService.validateHotelId(hotelId));
 
 		do {
 			System.out.print("Enter City: ");
 			city = console.next();
-		} while(!adminService.validateCity(city));
+		} while (!adminService.validateCity(city));
 
 		do {
 			System.out.print("Enter Hotel Name: ");
 			hotelName = console.next();
-		} while(!adminService.validateHotelName(hotelName));
+		} while (!adminService.validateHotelName(hotelName));
 
 		System.out.print("Enter Address: ");
 		address = console.next();
 
 		System.out.print("Add a description: ");
 		description = console.next();
-		
+
 		System.out.print("Enter average rate per night: ");
-		avgRatePerNight = console.next();
+		avgRatePerNight = console.nextDouble();
 
 		do {
 			System.out.print("Enter Phone No. 1: ");
 			phoneNo1 = console.next();
-		} while(!adminService.validatePhoneNo1(phoneNo1));
+		} while (!adminService.validatePhoneNo1(phoneNo1));
 
 		do {
 			System.out.print("Enter Phone No. 2: ");
 			phoneNo2 = console.next();
-		} while(!adminService.validatePhoneNo2(phoneNo2));
-		
+		} while (!adminService.validatePhoneNo2(phoneNo2));
+
 		do {
 			System.out.print("Enter Email ID: ");
 			email = console.next();
-		} while(!adminService.validateEmail(email));
+		} while (!adminService.validateEmail(email));
 
 		do {
 			System.out.print("Enter fax no.: ");
 			fax = console.next();
-		} while(!adminService.validateFax(fax));
+		} while (!adminService.validateFax(fax));
 
 		System.out.print("Enter hotel rating: ");
 		rating = console.next();
-		
+
 		Hotel h = new Hotel();
 		h.setHotelId(hotelId);
 		h.setCity(city);
@@ -427,11 +446,11 @@ public class UserInterface {
 		h.setPhoneNo1(phoneNo1);
 		h.setPhoneNo2(phoneNo2);
 		h.setEmail(email);
-		h.setFax(fax);	
+		h.setFax(fax);
 
 		try {
 			Hotel hotel = adminService.addHotel(h);
-			System.out.println("New hotel added successfully with Hotel ID: " + hotelId );
+			System.out.println("New hotel added successfully with Hotel ID: " + hotelId);
 			listHotels();
 		} catch (HotelNotFoundException e2) {
 			System.out.println("Hotel could not be added!! Try again");
@@ -439,21 +458,20 @@ public class UserInterface {
 
 	}
 
-	private static void modifyHotel(){
+	private static void modifyHotel() {
 		AdminService adminService = new AdminServiceImpl();
 
-		
 	}
 
-	private static void deleteHotel(){
+	private static void deleteHotel() {
 		AdminService adminService = new AdminServiceImpl();
 
 		int hotelId;
 
-		do{
+		do {
 			System.out.println("Enter hotel ID of the hotel to be deleted: ");
-			hotelId = console.next();
-		} while(!adminService.validateHotelId(hotelId));
+			hotelId = console.nextInt();
+		} while (!adminService.validateHotelId(hotelId));
 
 		try {
 			adminService.removeHotel(hotelId);
@@ -464,7 +482,7 @@ public class UserInterface {
 		}
 	}
 
-	private static void addRoom(){
+	private static void addRoom() {
 
 		AdminService adminService = new AdminServiceImpl();
 
@@ -474,28 +492,28 @@ public class UserInterface {
 
 		do {
 			System.out.print("Enter Hotel ID: ");
-			hotelId = console.next();
-		} while(!adminService.validateHotelId(hotelId));
+			hotelId = console.nextInt();
+		} while (!adminService.validateHotelId(hotelId));
 
 		do {
 			System.out.print("Enter Room ID: ");
-			roomId = console.next();
-		} while(!adminService.validateRoomId(roomId));
+			roomId = console.nextInt();
+		} while (!adminService.validateRoomId(roomId));
 
-		do{
+		do {
 			System.out.println("Enter Availability ('y/Y' for 'yes', 'n/N' for 'no'): ");
 			availability = console.next();
-		} while(!adminService.validateAvailability(availability));
+		} while (!adminService.validateAvailability(availability));
 
 		System.out.print("Enter Room No.: ");
 		roomNo = console.next();
-		
+
 		System.out.print("Enter Room Type: ");
 		roomType = console.next();
 
 		System.out.print("Enter the rate per night: ");
-		ratePerNight = console.next();
-		
+		ratePerNight = console.nextDouble();
+
 		Room r = new Room();
 		r.setRoomId(roomId);
 		r.setHotelId(hotelId);
@@ -505,18 +523,18 @@ public class UserInterface {
 
 		try {
 			Room room = adminService.addRoom(r);
-			System.out.println("New room added successfully with Room ID: " + roomId );
+			System.out.println("New room added successfully with Room ID: " + roomId);
 		} catch (HotelNotFoundException e2) {
 			System.out.println("Room could not be added!! Try again");
 		}
 	}
 
-	private static void modifyRoom(){
+	private static void modifyRoom() {
 		AdminService adminService = new AdminServiceImpl();
 
 	}
 
-	private static void deleteRoom(){
+	private static void deleteRoom() {
 		AdminService adminService = new AdminServiceImpl();
 
 		int roomId, hotelId;
@@ -525,15 +543,14 @@ public class UserInterface {
 
 		do {
 			System.out.print("Hotel ID: ");
-			hotelId = console.next();
-		} while(!adminService.validateHotelId(hotelId));
+			hotelId = console.nextInt();
+		} while (!adminService.validateHotelId(hotelId));
 
 		do {
 			System.out.print("Room ID: ");
-			roomId = console.next();
-		} while(!adminService.validateRoomId(roomId));
+			roomId = console.nextInt();
+		} while (!adminService.validateRoomId(roomId));
 
-		
 		try {
 			adminService.removeRoom(roomId, hotelId);
 			System.out.println("Room with ID: " + roomId + " deleted successfully!");
@@ -543,7 +560,7 @@ public class UserInterface {
 		}
 	}
 
-	private static void listHotels(){
+	private static void listHotels() {
 		AdminService adminService = new AdminServiceImpl();
 
 		try {
@@ -556,15 +573,15 @@ public class UserInterface {
 		}
 	}
 
-	private static void listBookings(){
+	private static void listBookings() {
 		AdminService adminService = new AdminServiceImpl();
 
 		int hotelId;
 
 		do {
 			System.out.print("Hotel ID: ");
-			hotelId = console.next();
-		} while(!adminService.validateHotelId(hotelId));
+			hotelId = console.nextInt();
+		} while (!adminService.validateHotelId(hotelId));
 
 		try {
 			ArrayList<Booking> result = adminService.viewBookings(hotelId);
@@ -576,15 +593,15 @@ public class UserInterface {
 		}
 	}
 
-	private static void listGuestList(){
+	private static void listGuestList() {
 		AdminService adminService = new AdminServiceImpl();
 
 		int hotelId;
 
 		do {
 			System.out.print("Hotel ID: ");
-			hotelId = console.next();
-		} while(!adminService.validateHotelId(hotelId));
+			hotelId = console.nextInt();
+		} while (!adminService.validateHotelId(hotelId));
 
 		try {
 			ArrayList<User> result = adminService.viewGuestList(hotelId);
@@ -596,20 +613,24 @@ public class UserInterface {
 		}
 	}
 
-	private static void listBookingByDate(){
+	private static void listBookingByDate() {
 		AdminService adminService = new AdminServiceImpl();
 
-		LocalDate bookedFrom, bookedTo;
+		Date bookedFrom, bookedTo;
+		String dateFrom, dateTo;
+		SimpleDateFormat myFormat = new SimpleDateFormat("dd MM yyyy");
 
 		do {
-			System.out.print("Booked from date: ");
-			bookedFrom = console.next();
-		} while(!adminService.validateDate(bookedFrom));
+			System.out.print("Booked from date ('dd mm yyyy') : ");
+			dateFrom = console.next();
+			bookedFrom = myFormat.parse(dateFrom);
+		} while (!adminService.validateDate(bookedFrom));
 
 		do {
-			System.out.print("Booked till date: ");
-			bookedTo = console.next();
-		} while(!adminService.validateDate(bookedTo));
+			System.out.print("Booked till date ('dd mm yyyy') : ");
+			dateTo = console.next();
+			bookedTo = myFormat.parse(dateTo);
+		} while (!adminService.validateDate(bookedTo));
 
 		try {
 			ArrayList<Booking> result = adminService.viewBookingByDate(bookedFrom, bookedTo);
@@ -620,5 +641,4 @@ public class UserInterface {
 			System.out.println("No bookings found!! Try again");
 		}
 	}
-
 }
