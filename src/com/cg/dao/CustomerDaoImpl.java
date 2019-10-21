@@ -98,7 +98,7 @@ public class CustomerDaoImpl implements CustomerDao{
 		Room room = null;
 		Connection conn = null;
 		List<Room> rooms = new ArrayList<>();
-		String sql = "select * from rommdetails where room_id=(select * from hotel where hotel_id=?)";
+		String sql = "select * from roomdetails where room_id=(select * from hotel where hotel_id=?)";
 		try {
 			conn = db.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql);

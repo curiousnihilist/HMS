@@ -29,7 +29,7 @@ public class DaoTest {
 	public void daoHotelTest() throws Exception {
 		Hotel h = new Hotel("Kolkata","Regent","Salt Lake","best in town","7894561122"
 							,"7903430071",2000.0,"go","reghelp@gmail.com","89-654");
-		//dao.addHotel(h);
+		dao.addHotel(h);
 		//dao.deleteHotel(1005);
 		//org.junit.Assert.assertNotNull(dao.listHotels().toString());
 		

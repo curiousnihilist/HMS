@@ -8,7 +8,7 @@ import java.sql.Statement;
 
 public class DBSetup {
 	private static String url ="jdbc:oracle:thin:@localhost:1521:xe";
-	private static String username ="Akash";
+	private static String username ="aman";
 	private static String pass ="oracle";
 	
 	public Connection getConnection() {
