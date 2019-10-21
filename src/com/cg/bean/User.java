@@ -1,15 +1,15 @@
-
 package com.cg.bean;
 
 public class User {
-	public int userId;
-	public String password;
-	public String userName;
-	public String role;
-	public long mobileNo;
-	public long phone;
-	public String address;
-	public String email;
+	private int userId;
+	private String password;
+	private String userName;
+	private String role;
+	private String mobileNo;
+	private String phone;
+	private String address;
+	private String email;
+	
 	public int getUserId() {
 		return userId;
 	}
@@ -34,16 +34,16 @@ public class User {
 	public void setRole(String role) {
 		this.role = role;
 	}
-	public long getMobileNo() {
+	public String getMobileNo() {
 		return mobileNo;
 	}
-	public void setMobileNo(long mobileNo) {
+	public void setMobileNo(String mobileNo) {
 		this.mobileNo = mobileNo;
 	}
-	public long getPhone() {
+	public String getPhone() {
 		return phone;
 	}
-	public void setPhone(long phone) {
+	public void setPhone(String phone) {
 		this.phone = phone;
 	}
 	public String getAddress() {
@@ -59,5 +59,8 @@ public class User {
 		this.email = email;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return "User ID: " + userId + "\t User Name: " + userName + "\t Role: " + role + "\t Mobile No.: " + mobileNo + "\t Phone No.: " + phone + "\t Address: " + address + "\t Email ID: " + email;
+	}
 }

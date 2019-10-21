@@ -1,12 +1,12 @@
 package com.cg.bean;
 
 public class Room {
-	public int hotelId;
-	public int roomId;
-	public int roomNo;
-	public String roomType;
-	public double ratePerNight;
-	public boolean availability;
+	private int hotelId;
+	private int roomId;
+	private String roomNo;
+	private String roomType;
+	private double ratePerNight;
+	private int availability;	// please validate user can enter "yes","no","y","n",1,0
 	
 	public int getHotelId() {
 		return hotelId;
@@ -20,10 +20,10 @@ public class Room {
 	public void setRoomId(int roomId) {
 		this.roomId = roomId;
 	}
-	public int getRoomNo() {
+	public String getRoomNo() {
 		return roomNo;
 	}
-	public void setRoomNo(int roomNo) {
+	public void setRoomNo(String roomNo) {
 		this.roomNo = roomNo;
 	}
 	public String getRoomType() {
@@ -38,13 +38,28 @@ public class Room {
 	public void setRatePerNight(double ratePerNight) {
 		this.ratePerNight = ratePerNight;
 	}
-	public boolean isAvailability() {
+	public int isAvailability() {
 		return availability;
 	}
-	public void setAvailability(boolean availability) {
+	public void setAvailability(int availability) {
+		this.availability = availability;
+	}
+	
+	public Room(int hotelId, String roomNo, String roomType, double ratePerNight, int availability) {
+		this.hotelId = hotelId;
+		this.roomNo = roomNo;
+		this.roomType = roomType;
+		this.ratePerNight = ratePerNight;
 		this.availability = availability;
 	}
 	
 	
+	public Room() {
+	}
+
+@Override
+	public String toString() {
+		return "Room ID: " + roomId + "\t Hotel ID: " + hotelId + "\t Room No.: " + roomNo + "\t Room Type: " + roomType + "\t Rate Per Night: " + ratePerNight + "\t Availability: " + availability;
+	}
 
 }

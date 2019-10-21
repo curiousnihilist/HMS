@@ -3,14 +3,23 @@ package com.cg.bean;
 import java.time.LocalDate;
 
 public class Booking {
-	public int bookingId;
-	public int roomId;
-	public int userId;
-	public LocalDate bookedFrom;
-	public LocalDate bookedTo;
-	public int adults;
-	public int children;
-	public double amount;
+	private int bookingId;
+	private int roomId;
+	private int userId;
+	private LocalDate bookedFrom;
+	private LocalDate bookedTo;
+	private int adults;
+	private int children;
+	private double amount;
+	private int hotelId;
+	
+	public int getHotelId() {
+		return hotelId;
+	}
+	public void setHotelId(int hotelId) {
+		this.hotelId = hotelId;
+	}
+	private LocalDate bookingDate;
 	
 	public int getBookingId() {
 		return bookingId;
@@ -59,6 +68,17 @@ public class Booking {
 	}
 	public void setAmount(double amount) {
 		this.amount = amount;
+	}
+	public LocalDate getBookingDate() {
+		return bookingDate;
+	}
+	public void setBookingDate(LocalDate bookingDate) {
+		this.bookingDate = bookingDate;
+	}
+
+	@Override
+	public String toString() {
+		return "Booking ID: " + bookingId + "\t Room ID: " + roomId + "\t Hotel ID: " + hotelId + "\t User ID: " + userId + "\t Booked from date: " + bookedFrom + "\t Booked till date: " + bookedTo + "\t No. of Adults: " + adults + "\t No. of children: " + children + "\t Amount to be paid: " + amount;
 	}
 	
 }
