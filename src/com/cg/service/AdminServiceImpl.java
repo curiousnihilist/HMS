@@ -1,5 +1,6 @@
 package com.cg.service;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -9,6 +10,9 @@ import com.cg.bean.Room;
 import com.cg.bean.User;
 import com.cg.dao.AdminDao;
 import com.cg.dao.AdminDaoImpl;
+import com.cg.exception.BookingNotFoundException;
+import com.cg.exception.HotelNotFoundException;
+import com.cg.exception.RoomNotFoundException;
 import com.cg.exception.UserNotFoundException;
 
 public class AdminServiceImpl implements AdminService{
@@ -26,8 +30,8 @@ public class AdminServiceImpl implements AdminService{
 	}
 
 	@Override
-	public int modifyHotel(int hotelId) {
-		return adao.modifyHotel(hotelId);
+	public void modifyHotel(Hotel hotel) throws HotelNotFoundException {
+		adao.modifyHotel(hotel);
 	}
 
 	@Override
@@ -41,8 +45,8 @@ public class AdminServiceImpl implements AdminService{
 	}
 
 	@Override
-	public int modifyRoom(int roomId) {
-		return adao.modifyRoom(roomId);
+	public void modifyRoom(Room room) throws RoomNotFoundException {
+		adao.modifyRoom(room);
 	}
 
 	@Override
@@ -61,13 +65,23 @@ public class AdminServiceImpl implements AdminService{
 	}
 
 	@Override
-	public List<Booking> bookingByDate(LocalDate date) {
+	public List<Booking> bookingByDate(Date date) throws BookingNotFoundException {
 		return adao.bookingByDate(date);
 	}
 
 	@Override
-	public boolean validateLogin(int userId, String password) throws UserNotFoundException {
-		return adao.validateLogin(userId,password);
+	public boolean validateLogin(String username, String password) throws UserNotFoundException {
+		return adao.validateLogin(username,password);
+	}
+
+	@Override
+	public Hotel findByHotelId(int hotelId) throws HotelNotFoundException {
+		return adao.findHotelById(hotelId);
+	}
+
+	@Override
+	public Room findByRoomId(int roomId) throws RoomNotFoundException {
+		return adao.findRoomById(roomId);
 	}
 	
 

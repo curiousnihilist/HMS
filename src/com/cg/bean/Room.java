@@ -38,7 +38,7 @@ public class Room {
 	public void setRatePerNight(double ratePerNight) {
 		this.ratePerNight = ratePerNight;
 	}
-	public int isAvailability() {
+	public int getAvailability() {
 		return availability;
 	}
 	public void setAvailability(int availability) {

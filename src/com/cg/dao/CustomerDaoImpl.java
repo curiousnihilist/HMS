@@ -39,6 +39,7 @@ public class CustomerDaoImpl implements CustomerDao{
 				return rs.getInt(1);
 			return 0;
 		} catch (SQLException e) {
+			e.printStackTrace();
 			throw new UserNotFoundException("No User found!");
 		}finally {
 			try {
@@ -55,7 +56,7 @@ public class CustomerDaoImpl implements CustomerDao{
 		Hotel hotel = null;
 		Connection conn = null;
 		List<Hotel> hotels = new ArrayList<>();
-		String sql = "select * from hotel where city=? and price between ? and ?";
+		String sql = "select * from hotel where city=? and avg_rate_per_night between ? and ?";
 		try {
 			conn = db.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql);
@@ -68,20 +69,21 @@ public class CustomerDaoImpl implements CustomerDao{
 				hotel.setHotelId(rs.getInt(1));
 				hotel.setCity(rs.getString(2));
 				hotel.setHotelName(rs.getString(3));
-				hotel.setDescription(rs.getString(4));
-				hotel.setPrice(rs.getDouble(5));
-				hotel.setPhoneNo1(rs.getString(6));
-				hotel.setPhoneNo2(rs.getString(7));
-				hotel.setRating(rs.getString(8));
-				hotel.setEmail(rs.getString(9));
-				hotel.setFax(rs.getString(10));
+				hotel.setAddress(rs.getString(4));
+				hotel.setDescription(rs.getString(5));
+				hotel.setPrice(rs.getDouble(6));
+				hotel.setPhoneNo1(rs.getString(7));
+				hotel.setPhoneNo2(rs.getString(8));
+				hotel.setRating(rs.getString(9));
+				hotel.setEmail(rs.getString(10));
+				hotel.setFax(rs.getString(11));
 				hotels.add(hotel);
 			}
 			if(hotels.isEmpty())
 				throw new HotelNotFoundException("No hotels found!");
 			return hotels;
 		} catch (SQLException e) {
-			throw new HotelNotFoundException("");
+			throw new HotelNotFoundException("No hotels found!");
 		}finally {
 			try {
 				if(conn!=null)
@@ -233,14 +235,16 @@ public class CustomerDaoImpl implements CustomerDao{
 	}
 	
 	@Override
-	public boolean validateLogin(int userId, String password) throws UserNotFoundException {
+	public boolean validateLogin(String username, String password) throws UserNotFoundException {
 		Connection conn = null;
-		String sql = "select password from users where role=customer and user_id=?";
+		String sql = "select password from users where role in (?,?) and user_name=?";
 		
 		try {
 			conn = db.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql);
-			st.setInt(1, userId);
+			st.setString(1, "customer");
+			st.setString(2, "hotel staff");
+			st.setString(3, username);
 			ResultSet rs = st.executeQuery();
 			if(rs.next()) {
 				return rs.getString(1).equals(password);
@@ -263,7 +267,7 @@ public class CustomerDaoImpl implements CustomerDao{
 		Hotel hotel = null;
 		Connection conn = null;
 		List<Hotel> hotels = new ArrayList<>();
-		String sql = "select * from hotel where hotel_name=";
+		String sql = "select * from hotel where hotel_name=?";
 		try {
 			conn = db.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql);
@@ -274,20 +278,21 @@ public class CustomerDaoImpl implements CustomerDao{
 				hotel.setHotelId(rs.getInt(1));
 				hotel.setCity(rs.getString(2));
 				hotel.setHotelName(rs.getString(3));
-				hotel.setDescription(rs.getString(4));
-				hotel.setPrice(rs.getDouble(5));
-				hotel.setPhoneNo1(rs.getString(6));
-				hotel.setPhoneNo2(rs.getString(7));
-				hotel.setRating(rs.getString(8));
-				hotel.setEmail(rs.getString(9));
-				hotel.setFax(rs.getString(10));
+				hotel.setAddress(rs.getString(4));
+				hotel.setDescription(rs.getString(5));
+				hotel.setPrice(rs.getDouble(6));
+				hotel.setPhoneNo1(rs.getString(7));
+				hotel.setPhoneNo2(rs.getString(8));
+				hotel.setRating(rs.getString(9));
+				hotel.setEmail(rs.getString(10));
+				hotel.setFax(rs.getString(11));
 				hotels.add(hotel);
 			}
 			if(hotels.isEmpty())
 				throw new HotelNotFoundException("No hotels found!");
 			return hotels;
 		} catch (SQLException e) {
-			throw new HotelNotFoundException("");
+			throw new HotelNotFoundException("No hotels found!");
 		}finally {
 			try {
 				if(conn!=null)
@@ -296,5 +301,35 @@ public class CustomerDaoImpl implements CustomerDao{
 				e.printStackTrace();
 			}
 		}
+	}
+
+	@Override
+	public int getCustomerUserId(String username) throws UserNotFoundException {
+		Connection conn = null;
+		String sql = "select user_id from users where user_name=?";
+		int userId=0;
+		
+		try {
+			conn = db.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, username);
+			ResultSet rs = st.executeQuery();
+			while(rs.next()) {
+				userId = rs.getInt(1);
+			}
+			if(userId==0)
+				throw new UserNotFoundException("User Not found!");
+			return userId;
+		} catch (SQLException e) {
+			throw new UserNotFoundException("User Not found!");
+		}finally {
+			try {
+				if(conn!=null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
 	}
 }

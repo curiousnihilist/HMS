@@ -97,4 +97,10 @@ public class Hotel {
 		
 	}
 	
+	@Override
+	public String toString() {
+		return "Hotel [hotelId=" + hotelId + ", city=" + city + ", hotelName=" + hotelName + ", address=" + address
+				+ ", description=" + description + ", phoneNo1=" + phoneNo1 + ", phoneNo2=" + phoneNo2 + ", price="
+				+ price + ", rating=" + rating + ", email=" + email + ", fax=" + fax + "]";
+	}
 }

@@ -1,6 +1,7 @@
 package com.cg.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,7 +14,9 @@ import com.cg.bean.Booking;
 import com.cg.bean.Hotel;
 import com.cg.bean.Room;
 import com.cg.bean.User;
+import com.cg.exception.BookingNotFoundException;
 import com.cg.exception.HotelNotFoundException;
+import com.cg.exception.RoomNotFoundException;
 import com.cg.exception.UserNotFoundException;
 
 public class AdminDaoImpl implements AdminDao{
@@ -86,14 +89,95 @@ public class AdminDaoImpl implements AdminDao{
 		}
 
 	}
-
+	
 	@Override
-	public int modifyHotel(int hotelId) {
-		return 0;
+	public Hotel findHotelById(int hotelId) throws HotelNotFoundException {
+		Connection conn = null;
+		String sql = "select * from hotel where hotel_id=?";
+		Hotel hotel = null;
+		try {
+			conn = db.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setInt(1, hotelId);
+			ResultSet rs = st.executeQuery();
+			while(rs.next()) {
+				hotel = new Hotel();
+				hotel.setHotelId(rs.getInt(1));
+				hotel.setCity(rs.getString(2));
+				hotel.setHotelName(rs.getString(3));
+				hotel.setAddress(rs.getString(4));
+				hotel.setDescription(rs.getString(5));
+				hotel.setPrice(rs.getDouble(6));
+				hotel.setPhoneNo1(rs.getString(7));
+				hotel.setPhoneNo2(rs.getString(8));
+				hotel.setRating(rs.getString(9));
+				hotel.setEmail(rs.getString(10));
+				hotel.setFax(rs.getString(11));
+			}
+			if(hotel == null)
+				throw new HotelNotFoundException("No Hotel Found by id: "+hotelId);
+			return hotel;
+		} catch (SQLException e) {
+			throw new HotelNotFoundException("No Hotel Found by id: "+hotelId);
+		} finally {
+			try {
+				if(conn!=null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
 	}
 
 	@Override
-	public int addRoom(Room room) throws Exception {
+	public void modifyHotel(Hotel hotel) throws HotelNotFoundException {
+		Connection conn = null;
+		String sql = "update Hotel set "
+				+ "city=?"
+				+ "hotel_name=?"
+				+ "address=?"
+				+ "description=?"
+				+ "avg_rate_per_night=?"
+				+ "phone_no1=?"
+				+ "phone_no2=?"
+				+ "rating=?"
+				+ "email=?"
+				+ "fax=?"
+				+ "where hotel_id=?";
+		
+		try {
+			conn = db.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1,hotel.getCity());
+			st.setString(2,hotel.getHotelName());
+			st.setString(3,hotel.getAddress());
+			st.setString(4,hotel.getDescription());
+			st.setDouble(5,hotel.getPrice());
+			st.setString(6,hotel.getPhoneNo1());
+			st.setString(7,hotel.getPhoneNo2());
+			st.setString(8,hotel.getRating());
+			st.setString(9,hotel.getEmail());
+			st.setString(10,hotel.getFax());
+			st.setInt(11, hotel.getHotelId());
+			int rows = st.executeUpdate();
+			if(rows == 0)
+				throw new HotelNotFoundException("Hotel Not Modified!");
+		} catch (SQLException e) {
+			throw new HotelNotFoundException("Hotel Not Modified!");
+		}finally {
+			try {
+				if(conn!=null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	@Override
+	public int addRoom(Room room) throws RoomNotFoundException {
 		Connection conn = null;
 		String check = "select * from hotel where hotel_id="+room.getHotelId();
 		String sql = "insert into roomdetails values(rseq.nextval,?,?,?,?,?)";
@@ -103,7 +187,7 @@ public class AdminDaoImpl implements AdminDao{
 			ResultSet rs1 = conn.createStatement().executeQuery(check);
 			
 			if(rs1.next() == false)
-				throw new HotelNotFoundException("Hotel not found with this room id!");
+				throw new RoomNotFoundException("Hotel not found with this room id!");
 
 			PreparedStatement st = conn.prepareStatement(sql);
 
@@ -111,7 +195,7 @@ public class AdminDaoImpl implements AdminDao{
 			st.setString(2,room.getRoomNo());
 			st.setString(3,room.getRoomType());
 			st.setDouble(4,room.getRatePerNight());
-			st.setInt(5,room.isAvailability());
+			st.setInt(5,room.getAvailability());
 			st.executeUpdate();
 			ResultSet rs = conn.createStatement().executeQuery(seq);
 			
@@ -121,7 +205,7 @@ public class AdminDaoImpl implements AdminDao{
 		
 			
 		} catch (SQLException e) {
-			throw new Exception("exception occured!");
+			throw new RoomNotFoundException("exception occured!");
 		}finally{
 			try {
 				if(conn!=null)
@@ -133,7 +217,7 @@ public class AdminDaoImpl implements AdminDao{
 	}
 
 	@Override
-	public int deleteRoom(int roomId) throws Exception {
+	public int deleteRoom(int roomId) throws RoomNotFoundException {
 		Connection conn = null;
 		String sql = "delete from roomdetails where room_id=?";
 		
@@ -146,8 +230,42 @@ public class AdminDaoImpl implements AdminDao{
 				return roomId;
 			return 0;
 		} catch (SQLException e) {
-			throw new Exception("Room not deleted"); 
+			throw new RoomNotFoundException("Room not deleted"); 
 		}finally{
+			try {
+				if(conn!=null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	@Override
+	public Room findRoomById(int roomId) throws RoomNotFoundException {
+		Connection conn=null;
+		String sql = "select * from room where room_id=?";
+		Room room = null;
+		try {
+			db.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setInt(1, roomId);
+			ResultSet rs = st.executeQuery();
+			while(rs.next()) {
+				room = new Room();
+				room.setRoomId(rs.getInt(1));
+				room.setHotelId(rs.getInt(2));
+				room.setRoomNo(rs.getString(3));
+				room.setRoomType(rs.getString(4));
+				room.setRatePerNight(rs.getDouble(5));
+				room.setAvailability(rs.getInt(6));
+			}
+			if (room==null)
+				throw new RoomNotFoundException("No Room Found by id: "+ roomId);
+			return room;
+		} catch (SQLException e) {
+			throw new RoomNotFoundException("No Room Found by id: "+ roomId);
+		} finally {
 			try {
 				if(conn!=null)
 					conn.close();
@@ -158,12 +276,42 @@ public class AdminDaoImpl implements AdminDao{
 	}
 
 	@Override
-	public int modifyRoom(int roomId) {
-		return 0;
+	public void modifyRoom(Room room) throws RoomNotFoundException {
+		Connection conn = null;
+		String sql = "update roomdetails set "
+				+ "hotel_id=?"
+				+ "room_no=?"
+				+ "room_type=?"
+				+ "per_night_rate=?"
+				+ "availibility=?"
+				+ "where room_id=?";
+		
+		try {
+			conn = db.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setInt(1,room.getHotelId());
+			st.setString(2,room.getRoomNo());
+			st.setString(3,room.getRoomType());
+			st.setDouble(4,room.getRatePerNight());
+			st.setInt(5, room.getAvailability());
+			st.setInt(6, room.getRoomId());
+			int rows = st.executeUpdate();
+			if(rows == 0)
+				throw new RoomNotFoundException("Hotel Not Modified!");
+		} catch (SQLException e) {
+			throw new RoomNotFoundException("Hotel Not Modified!");
+		}finally {
+			try {
+				if(conn!=null)
+					conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
-	public List<Hotel> listHotels() throws Exception {
+	public List<Hotel> listHotels() throws HotelNotFoundException {
 		Connection conn=null;
 		Hotel hotel = null;
 		List<Hotel> hotels= new ArrayList<Hotel>();
@@ -189,10 +337,10 @@ public class AdminDaoImpl implements AdminDao{
 				hotels.add(hotel);
 			}
 			if(hotels.isEmpty())
-				throw new Exception("No hotels found!");
+				throw new HotelNotFoundException("No hotels found!");
 			return hotels;
 		} catch (SQLException e) {
-			throw new Exception("Sql Exception");
+			throw new HotelNotFoundException("Sql Exception");
 		}finally {
 			try {
 				if(conn!=null)
@@ -205,16 +353,17 @@ public class AdminDaoImpl implements AdminDao{
 	}
 
 	@Override
-	public List<Booking> viewBookings(int hotelId) throws Exception {
+	public List<Booking> viewBookings(int hotelId) throws BookingNotFoundException {
 		Connection conn = null;
 		Booking booking = null;
 		List<Booking> bookings = new ArrayList<>();
 		String sql = "select * from bookingdetails where hotel_id=?";
-		conn = db.getConnection();
-		PreparedStatement st = conn.prepareStatement(sql);
-		st.setInt(1, hotelId);
-		ResultSet rs = st.executeQuery();
+		
 		try {
+			conn = db.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setInt(1, hotelId);
+			ResultSet rs = st.executeQuery();
 			while(rs.next()) {
 				booking = new Booking();
 				booking.setBookingId(rs.getInt(1));
@@ -229,10 +378,10 @@ public class AdminDaoImpl implements AdminDao{
 				bookings.add(booking);
 			}
 			if(bookings.isEmpty())
-				throw new Exception("No booking found!");
+				throw new BookingNotFoundException("No booking found!");
 			return bookings;
 		} catch (Exception e) {
-			throw new Exception("Sql Exception");
+			throw new BookingNotFoundException("Sql Exception");
 		}finally {
 			try {
 				if(conn!=null)
@@ -244,7 +393,7 @@ public class AdminDaoImpl implements AdminDao{
 	}
 
 	@Override
-	public List<User> viewGuestList(int hotelId) throws Exception {
+	public List<User> viewGuestList(int hotelId) throws UserNotFoundException {
 		Connection conn = null;
 		User user;
 		List<User> users = new ArrayList<User>();
@@ -267,10 +416,10 @@ public class AdminDaoImpl implements AdminDao{
 				users.add(user);
 			}
 			if(users.isEmpty())
-				throw new Exception("No user found");
+				throw new UserNotFoundException("No user found");
 			return users;
 		} catch (Exception e) {
-			throw new Exception("Sql Exception");
+			throw new UserNotFoundException("Sql Exception");
 		}finally {
 			try {
 				if(conn!=null)
@@ -282,27 +431,63 @@ public class AdminDaoImpl implements AdminDao{
 	}
 
 	@Override
-	public List<Booking> bookingByDate(LocalDate date) {
-		
-		return null;
-	}
-
-	@Override
-	public boolean validateLogin(int userId, String password) throws UserNotFoundException {
+	public List<Booking> bookingByDate(Date date) throws BookingNotFoundException {
 		Connection conn = null;
-		String sql = "select password from users where role=admin and user_id=?";
+		String sql = "select * from bookingdetails where bookingdate=?";
+		List<Booking> bookings = new ArrayList<Booking>();
+		Booking booking = null;
 		
 		try {
 			conn = db.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql);
-			st.setInt(1, userId);
+			st.setDate(1, date);
+			ResultSet rs = st.executeQuery();
+			while(rs.next()) {
+				booking = new Booking();
+				booking.setBookingId(rs.getInt(1));
+				booking.setRoomId(rs.getInt(2));
+				booking.setUserId(rs.getInt(3));
+				booking.setBookedFrom(rs.getDate(4).toLocalDate());
+				booking.setBookedTo(rs.getDate(5).toLocalDate());
+				booking.setAdults(rs.getInt(6));
+				booking.setChildren(rs.getInt(7));
+				booking.setAmount(rs.getDouble(8));
+				booking.setBookingDate(rs.getDate(9).toLocalDate());
+				bookings.add(booking);
+			}
+			if(bookings.isEmpty())
+				throw new BookingNotFoundException("No booking found!");
+			return bookings;
+		} catch (Exception e) {
+			throw new BookingNotFoundException("No booking found!");
+		}finally {
+			try {
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException e){
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@Override
+	public boolean validateLogin(String username, String password) throws UserNotFoundException {
+		Connection conn = null;
+		String sql = "select password from users where role=? and user_name=?";
+		
+		try {
+			conn = db.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, "admin");
+			st.setString(2, username);
 			ResultSet rs = st.executeQuery();
 			if(rs.next()) {
 				return rs.getString(1).equals(password);
 			}else
 				throw new UserNotFoundException("User Not Found!");
 		} catch (SQLException e) {
-			throw new UserNotFoundException("");
+			e.printStackTrace();
+			throw new UserNotFoundException("User Not Found-sql");
 		}finally {
 			try {
 				if(conn!=null)
